@@ -1,18 +1,42 @@
-﻿__pycache__/
+﻿# Créer un fichier .gitignore
+with open('.gitignore', 'w') as f:
+    f.write("""
+# Environnements virtuels
+venv/
+env/
+.venv/
+
+# Fichiers Python
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-.venv/
-*.egg-info/
-.installed.cfg
-*.egg
-data/raw/
-*.npy
-*.npz
-*.log
+*.so
+
+# Jupyter
 .ipynb_checkpoints/
-*.tmp
-*.temp
+*.ipynb
+
+# Données (ne pas versionner les gros fichiers)
+data/raw/
+data/processed/
+*.pkl
+*.h5
+*.hdf5
+
+# Modèles entraînés
+models/
+*.pth
+*.pt
+*.model
+
+# Logs
+logs/
+*.log
+
+# Système
+.DS_Store
+Thumbs.db
+    """)
+
+print("✅ Fichier .gitignore créé")
