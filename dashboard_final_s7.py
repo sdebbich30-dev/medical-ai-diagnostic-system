@@ -1,4 +1,4 @@
-# ===============================================================
+ # ===============================================================
 #        DASHBOARD IA MÉDICALE – EXPLICABILITÉ
 # ===============================================================
 
@@ -10,6 +10,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from PIL import Image
+
+
 
 st.set_page_config(
     page_title=" Diagnostic Médical IA",
@@ -261,14 +263,83 @@ elif menu == " Prédiction (IA)":
         st.image(overlay_occ, width=300)
 
 # ---------- PAGE ANALYSE ----------
+# ---------- PAGE ANALYSE ----------
 elif menu == " Analyse":
-    st.title(" Analyse globale")
+    st.title(" Analyse globale du modèle")
 
-    
+    st.markdown("###  Visualisation graphique")
 
+    # Données exemple (à remplacer plus tard par vraies stats si besoin)
     df = pd.DataFrame({
-        "Classe": ["Sain", "Malade"],
-        "Probabilité moyenne": [0.35, 0.65]
+        "Classe": [
+            "Aucune anomalie", "Atélectasie", "Cardiomégalie", "Consolidation",
+            "Œdème", "Épanchement pleural", "Emphysème", "Fibrose",
+            "Hernie", "Infiltration", "Masse", "Nodule",
+            "Pneumonie", "Pneumothorax"
+        ],
+        "Probabilité moyenne (%)": [
+            62, 18, 12, 15, 20, 25, 10, 14,
+            5, 22, 9, 11, 30, 8
+        ]
     })
 
-    st.bar_chart(df.set_index("Classe"))
+    # ---------- DASHBOARD VISUEL ----------
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("####  Distribution des probabilités")
+        st.bar_chart(
+            df.set_index("Classe")["Probabilité moyenne (%)"]
+        )
+
+    with col2:
+        st.markdown("####  Tableau récapitulatif")
+        st.dataframe(
+            df.sort_values("Probabilité moyenne (%)", ascending=False),
+            use_container_width=True
+        )
+
+    st.info(
+        "Ces graphiques permettent d’analyser le comportement global du modèle "
+        "et la distribution moyenne des pathologies détectées."
+    )
+    # =====================================================
+    # DASHBOARD SAIN vs MALADE
+    # =====================================================
+
+    st.markdown("###  Dashboard Patient Sain vs Malade")
+
+    # Données synthétiques (exemple)
+    df_health = pd.DataFrame({
+        "État du patient": ["Sain", "Malade"],
+        "Proportion (%)": [45, 55]
+    })
+
+    col3, col4 = st.columns(2)
+
+    # ---- Indicateurs clés ----
+    with col3:
+        st.metric(
+            label="🟢 Patients sains",
+            value="45 %",
+            delta="-5 %"
+        )
+
+    with col4:
+        st.metric(
+            label="🔴 Patients malades",
+            value="55 %",
+            delta="+5 %"
+        )
+
+    # ---- Graphique comparatif ----
+    st.markdown("####  Comparaison globale")
+
+    st.bar_chart(
+        df_health.set_index("État du patient")
+    )
+
+    st.success(
+        "Ce dashboard permet une lecture rapide de la proportion globale "
+        "des patients sains et malades détectés par le modèle."
+    )
